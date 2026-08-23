@@ -7,7 +7,7 @@ class Request:
         path : str,
         version : str,
         headers : dict[str, str],
-        body : str
+        body : bytes
     ):  
         self.addr = addr
         self.method = method
@@ -20,7 +20,7 @@ class Request:
     def parse(cls, addr: str, raw: bytes):
 
         headers = {}
-        body = ""
+        body = b''
         for idx, line in enumerate(raw.decode().splitlines()):
             if idx == 0: #Request line
                 line = line.split()
