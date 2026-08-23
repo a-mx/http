@@ -1,12 +1,15 @@
+import datetime
 class Request:
     def __init__(
         self,
+        addr : str,
         method : str,
         path : str,
         version : str,
         headers : dict[str, str],
         body : str
-    ):
+    ):  
+        self.addr = addr
         self.method = method
         self.path = path
         self.version = version
@@ -14,11 +17,11 @@ class Request:
         self.body = body
 
     @classmethod
-    def parse(cls, raw: bytes):
-        print()
+    def parse(cls, addr: str, raw: bytes):
+
         headers = {}
         body = ""
-        for idx, line in enumerate(raw.splitlines()):
+        for idx, line in enumerate(raw.decode().splitlines()):
             if idx == 0: #Request line
                 line = line.split()
                 method = line[0]
@@ -31,9 +34,16 @@ class Request:
                 headers[line[0]] = line[1]
         
         return cls(
+            addr=addr,
             method=method,
             path=path,
             version=version,
             headers=headers,
             body=body
         )
+    
+    def __str__(self) -> str:
+        date = datetime.datetime.now()
+        return f"[{date}] Request from {self.addr}: {self.method} {self.path} {self.version}"
+        
+        
