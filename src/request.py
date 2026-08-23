@@ -1,19 +1,39 @@
 class Request:
-    def __init__(self, unparsed: str):
-        self.unparsed = unparsed
-        self.method = None
-        self.path = None
-        self.version = None
-        self.headers = {}
+    def __init__(
+        self,
+        method : str,
+        path : str,
+        version : str,
+        headers : dict[str, str],
+        body : str
+    ):
+        self.method = method
+        self.path = path
+        self.version = version
+        self.headers = headers
+        self.body = body
 
-        for idx, line in enumerate(self.unparsed.splitlines()):
+    @classmethod
+    def parse(cls, raw: bytes):
+        print()
+        headers = {}
+        body = ""
+        for idx, line in enumerate(raw.splitlines()):
             if idx == 0: #Request line
                 line = line.split()
-                self.method = line[0]
-                self.path = line[1]
-                self.version = line[2]
+                method = line[0]
+                path = line[1]
+                version = line[2]
             elif line == '': #Empty line
                 continue
             else: #Request headers
                 line = line.split(": ")
-                self.headers[line[0]] = line[1]
+                headers[line[0]] = line[1]
+        
+        return cls(
+            method=method,
+            path=path,
+            version=version,
+            headers=headers,
+            body=body
+        )
