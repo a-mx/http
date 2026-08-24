@@ -1,29 +1,15 @@
 from request import Request
 class Response:
-    STATUS_CODES = {
-        200: "OK",
-        201: "Created",
-        204: "No Content",
-
-        301: "Moved Permanently",
-
-        400: "Bad Request",
-        401: "Unauthorized",
-        404: "Forbidden",
-        404: "Not Found",
-        405: "Method Not Allowed",
-
-        500: "Internal Server Error",
-    }
     def __init__(
             self, 
             status_code: int,
+            status_message: str,
             headers: dict[str,str],
             version: str = "HTTP/1.1",
             body: bytes = b''):
         self.version = version
         self.status_code = status_code
-        self.status_message = self.STATUS_CODES[self.status_code]
+        self.status_message = status_message
         self.headers = headers
         self.body = body
 
@@ -37,6 +23,5 @@ class Response:
             for name, value in self.headers.items()
         )
 
-        return status_line.encode() + headers.encode() + b"\r\n" + self.body
-        
+        return status_line.encode() + headers.encode() + b"\r\n" + self.body    
 
